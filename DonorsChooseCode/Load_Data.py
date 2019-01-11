@@ -1,7 +1,6 @@
 from pyspark.sql.session import SparkSession
 from pyspark import SparkContext
 import pyspark
-#import pandas
 import yaml
 import yaycl_crypt
 import yaycl
@@ -9,10 +8,10 @@ import yaycl
 sc = SparkContext(master = 'local[*]')
 spark = SparkSession(sc)
 
-conf = yaycl.Config('/home/ashishgusai/assesment2/filter-join_DF/', crypt_key='/home/ashishgusai/assesment2/filter-join_DF/secret_text')
+conf = yaycl.Config('/Internship_assessments/DonorsChooseCode/', crypt_key='/Internship_assessments/DonorsChooseCode/secret_text')
 #yaycl_crypt.encrypt_yaml(conf, 'config')
 yaycl_crypt.decrypt_yaml(conf, 'config')
-file1=open("/home/ashishgusai/assesment2/filter-join_DF/config.yaml")
+file1=open("/Internship_assessments/DonorsChooseCode/config.yaml")
 yaycl_crypt.encrypt_yaml(conf, 'config')
 
 cfg=yaml.load(file1)
@@ -25,13 +24,12 @@ def colRename_wrtprq(DF ,prq_name):
 	except:
 		yield	
 
-#read data from hdfs ,
+#read data from hdfs 
 try:
 	donationsDF = spark.read.parquet("hdfs:///inputs/DonorChoose/donations.parquet")
 except:
 	donationsDF = spark.read.csv("hdfs:///inputs/DonorChoose/Donations.csv", header= True, inferSchema= True)
 	colRename_wrtprq(donationsDF ,'donations')
-
 	
 try:
 	donorsDF = spark.read.parquet("hdfs:///inputs/DonorChoose/donors.parquet")
@@ -62,5 +60,3 @@ try:
 except:
 	TeachersDF = spark.read.csv("hdfs:///inputs/DonorChoose/Teachers.csv", header= True, inferSchema= True)
 	colRename_wrtprq(TeachersDF ,'teachers')
-
-
