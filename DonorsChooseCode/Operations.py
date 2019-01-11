@@ -14,7 +14,6 @@ donor_donation = donationsDF.join(donorsDF,['DonorID'])
 
 project_resource=projectsDF.join(resourcesDF,['ProjectID'],'left_outer')
 
-
 school_project=projectsDF.join(schoolsDF,['SchoolID'],'right_outer')
 
 school_project.select('ProjectTitle','SchoolName').show()
@@ -61,7 +60,6 @@ project_school_donation.rdd.map(lambda x: (x['ProjectType'],x['DonationAmount'])
 #map 
 resourcesDF.rdd.map(lambda x: (x['ResourceItemName'],float(x['ResourceQuantity']) * float(x['ResourceUnitPrice']))).toDF(['Resource','Amount']).show()
 
-
 #Yield 
 def my_gen():
 	for project_desc in project_desc.rdd.collect():
@@ -69,9 +67,7 @@ def my_gen():
 a =my_gen()
 next(a)
 
-
-
-'''
+#other Examples
 def my_gen():
 	for project_desc in project_desc.rdd.toLocalIterator():
         	yield print(project_desc)
@@ -89,7 +85,6 @@ donor_donation.withColumn('col_new', donor_donation.donationAmount /2.0).select(
 
 #drop column(s)
 donor_donation.drop('col_nm').columns
-
 
 #Count Number of rows
 donor_donation.count(),donorsDF.count(),donationsDF.count()
@@ -112,9 +107,3 @@ donor_donation.select('DonorCity').distinct().count()
 
 #drop Duplicates
 donor_donation.select('DonorCity','DonorState').dropDuplicates().show(10)
-
-
-'''
-
-
-
