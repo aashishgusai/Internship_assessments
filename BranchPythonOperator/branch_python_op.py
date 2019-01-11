@@ -1,5 +1,4 @@
 import random
-
 import airflow
 from airflow.models import DAG
 from datetime import datetime, timedelta
@@ -55,5 +54,4 @@ for option in options:
 	)
 
 	branching >> t >> dummy_follow >> join
-
-
+	
