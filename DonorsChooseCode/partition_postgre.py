@@ -29,14 +29,3 @@ pd_filter=spark.read.format('jdbc').options(url='jdbc:postgresql:airflow',dbtabl
 
 pd_filter.show()
 
-
-'''
-#and make parquet file of it and read it
-empDF1=spark.read.parquet('hdfs:///inputs/department/DEPARTMENT=AVIATION','hdfs:///inputs/department/DEPARTMENT=BUILDINGS')
-
-'''
-
-
-
-
-
