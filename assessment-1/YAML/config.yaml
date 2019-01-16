@@ -1,0 +1,9 @@
+url:
+    path: 'jdbc:sqlserver://localhost:1433;databaseName=TestDB;user=test;password=test;'
+    databaseName: 'databaseName=TestDB;'
+    user: 'user=test;'
+    password: 'password=test;'
+dbtable:
+    name: table_test
+type:
+    conn_type: jdbc
