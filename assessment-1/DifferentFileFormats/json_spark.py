@@ -14,6 +14,6 @@ df.show()
 df.createOrReplaceTempView("example1")
 
 capital_name = spark.sql("SELECT fruit FROM example1")
-capital_name.show()
 
+capital_name.show()
 

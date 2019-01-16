@@ -8,4 +8,5 @@ df = spark.read.csv('hdfs:///inputs/dept.csv',header=True,inferSchema=True)
 
 df.write.orc("hdfs:///inputs/orc_test")
 orcdf = spark.read.orc('hdfs:///inputs/orc_test')
+
 orcdf.show()
