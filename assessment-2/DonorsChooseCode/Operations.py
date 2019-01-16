@@ -22,8 +22,20 @@ school_project.select('ProjectTitle','SchoolName').show()
 donor_donation.filter(donor_donation.DonationAmount > 50000).count()
 
 #groupby and aggregation
-donor_donation.groupby('DonorCity').agg({'DonationAmount':'sum'}).show()
+donor_donation.groupby('DonorCity').agg({'DonationAmount':'sum'}).show(5)
+'''
++--------------+-------------------+                                            
+|     DonorCity|sum(DonationAmount)|
++--------------+-------------------+
+|  Harleysville| 17384.510000000002|
+|     Worcester| 120106.99999999999|
+|  Saint George| 117450.87000000001|
+|West Sand Lake|            2236.14|
+|    Blythewood|           15168.62|
++--------------+-------------------+
+only showing top 5 rows
 
+'''
 donor_donation.createOrReplaceTempView('donor_donation')
 
 donor_teacher=spark.sql('select * from donor_donation where DonorIsTeacher =="Yes" ')
@@ -43,22 +55,82 @@ pd_filter.write.format(op.cfg['type'].get('conn_type')).options(url=op.cfg['url'
 
 #sum of amount given in project
 project_desc.select('projectType','DonationAmount').groupby('projectType').agg({'DonationAmount':'sum'}).show()
+'''
++--------------------+-------------------+                                      
+|         projectType|sum(DonationAmount)|
++--------------------+-------------------+
+|         Teacher-Led|2.760971264899999E8|
+|Professional Deve...|  2474442.530000001|
+|         Student-Led|  2711059.040000002|
++--------------------+-------------------+
+'''
 
 #citywise total a/m
 project_desc.select('DonorCity','donationAmount').groupby('DonorCity').agg({'donationAmount':'sum'}).show()
+'''
++--------------+-------------------+                                            
+|     DonorCity|sum(donationAmount)|
++--------------+-------------------+
+|  Harleysville| 17059.510000000002|
+|     Worcester| 119454.99999999999|
+|  Saint George| 117375.87000000001|
+|West Sand Lake|            2216.14|
+|    Blythewood|           14948.62|
++--------------+-------------------+
+only showing top 5 rows
+
+'''
 
 #city with > 10000 donation
 data=spark.sql("select DonorCity, sum(DonationAmount) as DA  from project_desc group By DonorCity having DA > 10000 order By DA DESC ")
 data.show()
+'''
++-------------+------------------+                                              
+|    DonorCity|                DA|
++-------------+------------------+
+|     New York| 8220977.149999996|
+|      Chicago| 5282309.009999998|
+|San Francisco|3906520.5100000002|
+|     Brooklyn|3750926.6500000013|
+|  Los Angeles|3141732.8500000015|
++-------------+------------------+
+only showing top 5 rows
+
+'''
 
 #school with amount of donation
 school_data = spark.sql('select SchoolName, sum(DonationAmount) as DA  from school_donation group By SchoolName order By DA DESC')
+'''
++--------------------+------------------+                                       
+|          SchoolName|                DA|
++--------------------+------------------+
+|Lincoln Elementar...| 633878.3099999998|
+|PS 126 Jacob Augu...| 549058.0400000003|
+|Washington Elemen...| 513892.4000000001|
+|Greenwood Element...|448426.14999999985|
+|Jefferson Element...|441742.04999999993|
++--------------------+------------------+
+
+'''
 
 #map
 project_school_donation.rdd.map(lambda x: (x['ProjectType'],x['DonationAmount'])).toDF(['Project','Donation']).show()
 
 #map 
 resourcesDF.rdd.map(lambda x: (x['ResourceItemName'],float(x['ResourceQuantity']) * float(x['ResourceUnitPrice']))).toDF(['Resource','Amount']).show()
+'''
++--------------------+------+                                                   
+|            Resource|Amount|
++--------------------+------+
+|chair move and st...| 350.0|
+|sony mdr zx100 bl...| 514.4|
+|gaiam kids stay-n...|  76.0|
+|cf520x - giant co...| 269.0|
+|serta lounger, mi...|131.85|
++--------------------+------+
+only showing top 5 rows
+
+'''
 
 #Yield 
 def my_gen():
